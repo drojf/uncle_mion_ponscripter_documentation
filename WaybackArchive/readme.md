@@ -1,0 +1,1 @@
+note: 'framed' version can be accessed here: https://web.archive.org/web/20171016193549/http://unclemion.com:80/onscripter/api/NScrAPI-framed.xml
