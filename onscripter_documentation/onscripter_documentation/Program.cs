@@ -6,11 +6,147 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace onscripter_documentation
 {
     class Program
     {
+        static Regex whitespaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
+        static Regex H2HeaderRegex = new Regex(@"\[([^]]*)]\s*\(([^\)]*)\)", RegexOptions.Compiled);
+
+        //Example of H2 Header Block:
+        //
+        // <div class="Support">
+        //     <span class="WordVersion">
+        //         Ver.(undoc)
+        //     </span>
+        //     <span class="WordField">
+        //         <span class="NoBr">
+        //             [Definition/Program Block]
+        //         </span>
+        //     </span>
+        //     <span class="EngineField">
+        //         <span class="NoBr">
+        //             ( NScr
+        //             <span class="EngineVersion">
+        //                 2.03
+        //             </span>
+        //         </span>
+        //         ,
+        //         <span class="NoBr">
+        //             ONScr-EN
+        //             <span class="EngineVersion">
+        //                 20091010
+        //             </span>
+        //             )
+        //         </span>
+        //     </span>
+        // </div>
+        // <div class="WordName">
+        //     humanpos
+        // </div>
+
+        private static void ExceptionIfStringEmpty(string s)
+        {
+            if(s == String.Empty)
+            {
+                throw new Exception("String is Empty!");
+            }
+        }
+
+        private static void ExceptionIfListCountNotOne<T>(List<T> l)
+        {
+            if (l.Count != 1)
+            {
+                throw new Exception("List not of size 1");
+            }
+        }
+
+        private static IElement GetFirstElementOfClassOrError(IElement el, string className)
+        {
+            var childrenWithClassName = el.Children.Where((c) => c.ClassName == className).ToList();
+            if(childrenWithClassName.Count != 1)
+            {
+                throw new Exception("List not of size 1");
+            }
+            return childrenWithClassName.First();
+        }
+
+        private static IElement GetFirstElementOrError(IElement el)
+        {
+            if (el.ChildElementCount != 1)
+            {
+                throw new Exception("List not of size 1");
+            }
+
+            return el.FirstElementChild;
+        }
+
+        private static string ConvertToTextString(INode el)
+        {
+            return whitespaceRegex.Replace(el.Text(), " ").Trim();
+            //StringBuilder sb = new StringBuilder();
+            //ConvertToTextStringRec(sb, el);
+            //return sb.ToString();
+        }
+
+        /*private static void ConvertToTextStringRec(StringBuilder sb, INode el)
+        {
+            if (el.NodeType == NodeType.Text)
+            {
+                Console.WriteLine($"[{el.Text()}]");
+                sb.Append(el.Text());
+            }
+
+            foreach (var c in el.ChildNodes)
+            {
+                ConvertToTextStringRec(sb, c);
+            }
+        }*/
+
+        class H2HeaderInformation
+        {
+            public readonly string sectionsWhereCommandCanBeUsed;
+            public readonly string versionsWhereCommandCanBeUsed;
+            public readonly string wordName;
+
+            public H2HeaderInformation(string sectionsWhereCommandCanBeUsed, string versionsWhereCommandCanBeUsed, string wordName)
+            {
+                this.sectionsWhereCommandCanBeUsed = sectionsWhereCommandCanBeUsed;
+                this.versionsWhereCommandCanBeUsed = versionsWhereCommandCanBeUsed;
+                this.wordName = wordName;
+            }
+
+            public override string ToString()
+            {
+                return $"[{sectionsWhereCommandCanBeUsed}] ({versionsWhereCommandCanBeUsed}): {wordName}";
+            }
+        }
+
+        class FunctionEntry
+        {
+            public string id;
+            public string category;
+            public H2HeaderInformation headerInformation;
+        }
+
+        static H2HeaderInformation ParseH2HeaderBlock(IElement h2HeaderElement)
+        {
+            string asRawText = ConvertToTextString(GetFirstElementOfClassOrError(h2HeaderElement, "Support"));
+
+            string[] splitHeader = asRawText.Split(new char[] { '[', ']', '(', ')' } );
+            string sectionsWhereCommandCanBeUsed = splitHeader[1].Trim();
+            string versionsWhereCommandCanBeUsed = splitHeader[3].Trim();            
+            ExceptionIfStringEmpty(sectionsWhereCommandCanBeUsed);
+            ExceptionIfStringEmpty(versionsWhereCommandCanBeUsed);
+
+            string wordName = ConvertToTextString(GetFirstElementOfClassOrError(h2HeaderElement, "WordName"));
+
+            return new H2HeaderInformation(sectionsWhereCommandCanBeUsed, versionsWhereCommandCanBeUsed, wordName);
+        }
+
         //Each block appears as the following:
         // 1. A <a> tag, like <a id="_minus-sign"> </a>. This is not visible, but is the anchor which you visit when you are linked to a specific command
         // 2. A <h2> tag, which contains the light purple part of the header. It contains misc info like which onscripter version it can be used in, and [Definition/Program Block]
@@ -30,6 +166,8 @@ namespace onscripter_documentation
                 return false;
             }
 
+            FunctionEntry functionEntry = new FunctionEntry();
+
             // 1. Index link  <a id="_minus-sign"> </ a >
             var name = children.Current;
             if (name.TagName.ToLower() != "a")
@@ -39,22 +177,20 @@ namespace onscripter_documentation
             }
             else
             {
+                functionEntry.id = name.Id;
                 Console.WriteLine($"Got Definition for: {name.Id}");            
             }
 
             // 2. Info like onscripter version it can be used in, and [Definition/Program Block]
             children.MoveNext();
             var miscinfo = children.Current;
+            functionEntry.headerInformation = ParseH2HeaderBlock(miscinfo);
 
             // 3. <h4> tag - Category, like Variable Manipulation/Calculations
+            // <a class="WordCategory" href="#category_tag"> Pretext Tags </a>
             children.MoveNext();
             var categoryGroup = children.Current; //<h4> tag
-            foreach (var category in categoryGroup.Children)
-            {
-                // <a class="WordCategory" href="#category_tag"> Pretext Tags </a>
-                string categoryString = category.TextContent.Trim();
-                Console.WriteLine(categoryString);
-            }
+            functionEntry.category = GetFirstElementOrError(categoryGroup).TextContent.Trim();
 
             // 4. Argument section. There may be multiple of this type of element if function is overloaded
             while(true)
