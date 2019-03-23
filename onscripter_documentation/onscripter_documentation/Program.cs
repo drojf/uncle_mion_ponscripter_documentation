@@ -17,6 +17,7 @@ namespace onscripter_documentation
             public string id;
             public string category;
             public H2HeaderInformation headerInformation;
+            public string functionSignature; // 4.
         }
 
         //Each block appears as the following:
@@ -75,6 +76,7 @@ namespace onscripter_documentation
 
                 // 4a. <h3> Contains number/type of arguments (not always regular - see the 'subtract (-)' entry)
                 var arguments = children.Current;
+                functionEntry.functionSignature = Util.ConvertToTextStringWithoutWhitespace(children.Current);
                 //Console.WriteLine(arguments.InnerHtml);
 
                 // 4b. <div class="Arguments"> Argument descriptions (div Arguments)
