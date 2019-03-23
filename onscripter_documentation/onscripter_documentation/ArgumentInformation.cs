@@ -38,12 +38,8 @@ namespace onscripter_documentation
             {
                 List<ArgumentEntry> argumentEntries = new List<ArgumentEntry>();
                 var children = divArguments.Children.GetEnumerator();
-                while(true)
+                while(children.MoveNext())
                 {
-                    if (!children.MoveNext())
-                    {
-                        break;
-                    }
                     IElement argTypeElement = children.Current;
                     Util.ValidateElementClass(argTypeElement, "ArgType");
 

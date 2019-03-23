@@ -52,7 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentInformation.cs" />
+    <Compile Include="FunctionDescription.cs" />
     <Compile Include="H2HeaderInformation.cs" />
+    <Compile Include="Link.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
