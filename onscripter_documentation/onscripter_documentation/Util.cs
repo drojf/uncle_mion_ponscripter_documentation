@@ -112,8 +112,11 @@ namespace onscripter_documentation
                 variableToSet = valueToSet;
             }
         }
-
-
-
+        public static void pauseExit(int exitCode)
+        {
+            Console.WriteLine("press any key to exit");
+            Console.ReadKey();
+            Environment.Exit(exitCode);
+        }
     }
 }
