@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Linq;
 
 namespace onscripter_documentation
 {
@@ -91,12 +92,11 @@ namespace onscripter_documentation
                 //Movenext not necessary as will have been carried out by previous stage
                 var functionDescription = children.Current;
                 Console.WriteLine(functionDescription.InnerHtml);
-                functionEntry.functionDescription = FunctionDescription.ParseContentBody(functionDescription);
+                functionEntry.functionDescription = new FunctionDescription(functionDescription);
 
                 return functionEntry;
             }
         }
-
 
         static void Main(string[] args)
         {
@@ -116,6 +116,9 @@ namespace onscripter_documentation
 
             var childIter = functionDetailedDocumentation.Children.GetEnumerator();
 
+            var globalClasses = new HashSet<string>();
+            
+
             List<FunctionEntry> functionEntries = new List<FunctionEntry>(); 
             while (true)
             {
@@ -128,7 +131,20 @@ namespace onscripter_documentation
                 {
                     functionEntries.Add(ent);
                 }
+
+                //need to separate each of these based class names, then convert to markdown
+                //eg for <PRE|ExSource> just surround with ``` ```
+                /*foreach (IElement functionDescriptionElement in ent.functionDescription.descriptionElements)
+                {
+                    globalClasses.UnionWith(Util.GetRecursivelyAsSet((element) => element.TagName + "|" + element.ClassName, functionDescriptionElement));
+                }*/
             }
+
+            //Console.WriteLine("Found the following tags in the function description elements:");
+            //foreach (string tag in globalClasses)
+            //{
+            //    Console.WriteLine(tag);
+            //}
 
             //write out function entries as json
 
