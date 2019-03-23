@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace onscripter_documentation
 {
@@ -30,7 +31,6 @@ namespace onscripter_documentation
             var childIter = functionDetailedDocumentation.Children.GetEnumerator();
 
             var globalClasses = new HashSet<string>();
-            
 
             List<FunctionEntry> functionEntries = new List<FunctionEntry>(); 
             while (true)
@@ -44,22 +44,15 @@ namespace onscripter_documentation
                 {
                     functionEntries.Add(ent);
                 }
-
-                //need to separate each of these based class names, then convert to markdown
-                //eg for <PRE|ExSource> just surround with ``` ```
-                /*foreach (IElement functionDescriptionElement in ent.functionDescription.descriptionElements)
-                {
-                    globalClasses.UnionWith(Util.GetRecursivelyAsSet((element) => element.TagName + "|" + element.ClassName, functionDescriptionElement));
-                }*/
             }
 
-            //Console.WriteLine("Found the following tags in the function description elements:");
-            //foreach (string tag in globalClasses)
-            //{
-            //    Console.WriteLine(tag);
-            //}
-
             //write out function entries as json
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(@"onscripter_documentation.json"))
+            using (JsonWriter writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented } )
+            {
+                serializer.Serialize(writer, functionEntries);
+            }
 
             Util.pauseExit(0);
         }
