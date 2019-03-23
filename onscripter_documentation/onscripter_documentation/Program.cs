@@ -1,5 +1,5 @@
 ﻿using AngleSharp.Dom;
-using AngleSharp.Parser.Html;
+using AngleSharp.Html.Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,8 +83,9 @@ namespace onscripter_documentation
 
             // Create a new parser front-end (can be re-used)
             var parser = new HtmlParser();
+
             //Just get the DOM representation
-            var document = parser.Parse(htmltext);
+            var document = parser.ParseDocument(htmltext);
 
             //look for <div id="MAIN">
             var functionDetailedDocumentation = document.GetElementById("MAIN");
