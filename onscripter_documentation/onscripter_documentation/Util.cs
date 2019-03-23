@@ -8,8 +8,7 @@ namespace onscripter_documentation
 {
     class Util
     {
-        static Regex whitespaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
-        static Regex H2HeaderRegex = new Regex(@"\[([^]]*)]\s*\(([^\)]*)\)", RegexOptions.Compiled);
+        static readonly Regex whitespaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
 
         public static void ExceptionIfStringEmpty(string s)
         {
@@ -50,6 +49,14 @@ namespace onscripter_documentation
         public static string ConvertToTextStringWithoutWhitespace(INode el)
         {
             return whitespaceRegex.Replace(el.Text(), " ").Trim();
+        }
+
+        public static void ValidateElementClass(IElement el, string className)
+        {
+            if (el.ClassName != className)
+            {
+                throw new Exception($"unexpected node class {el.ClassName}");
+            }
         }
     }
 }
