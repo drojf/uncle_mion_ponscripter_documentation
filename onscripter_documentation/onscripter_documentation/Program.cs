@@ -11,6 +11,15 @@ namespace onscripter_documentation
 {
     class Program
     {
+        //Each block appears as the following:
+        // 1. A <a> tag, like <a id="_minus-sign"> </a>. This is not visible, but is the anchor which you visit when you are linked to a specific command
+        // 2. A <h2> tag, which contains the light purple part of the header. It contains misc info like which onscripter version it can be used in, and [Definition/Program Block]
+        // 3. A <h4> tag, which contains the dark purple part of the header. It contains the Category, like Variable Manipulation/Calculations
+        // 4. The argument section. If the function is overloaded, there will be one argument section for each overload. It consists of (all on the root element)
+        //   4a. A <h3> tag, which contains the argument summary (type/order of arguments)
+        //   4b. A <div class="Arguments"> which contains the a description of each argumens 
+        // 5. A <div class="ContentBody">, which contains the command description, AND the links to related commands
+
         //iterates of the 'MAIN' div of the onscripter documentation
         //returns true if still items to process, false otherwise
         static bool ParseOneFunctionEntry(IEnumerator<IElement> children)
@@ -21,7 +30,7 @@ namespace onscripter_documentation
                 return false;
             }
 
-            //First element is index link  <a id="_minus-sign"> </ a >
+            // 1. Index link  <a id="_minus-sign"> </ a >
             var name = children.Current;
             if (name.TagName.ToLower() != "a")
             {
@@ -33,11 +42,11 @@ namespace onscripter_documentation
                 Console.WriteLine($"Got Definition for: {name.Id}");            
             }
 
-            //Second elemnt is misc info like which onscripter version it can be used in, and [Definition/Program Block]
+            // 2. Info like onscripter version it can be used in, and [Definition/Program Block]
             children.MoveNext();
             var miscinfo = children.Current;
 
-            //Third element is category, like Variable Manipulation/Calculations
+            // 3. <h4> tag - Category, like Variable Manipulation/Calculations
             children.MoveNext();
             var categoryGroup = children.Current; //<h4> tag
             foreach (var category in categoryGroup.Children)
@@ -47,8 +56,7 @@ namespace onscripter_documentation
                 Console.WriteLine(categoryString);
             }
 
-            //Fourth element is number of arguments (not always regular - see the 'subtract (-)' entry)
-            //There may be multiple of this type of element if function is overloaded
+            // 4. Argument section. There may be multiple of this type of element if function is overloaded
             while(true)
             {
                 children.MoveNext();
@@ -56,18 +64,18 @@ namespace onscripter_documentation
                 {
                     break;
                 }
-                
-                //Argument name/order list
+
+                // 4a. <h3> Contains number/type of arguments (not always regular - see the 'subtract (-)' entry)
                 var arguments = children.Current;
                 //Console.WriteLine(arguments.InnerHtml);
 
-                //Argument descriptions (div Arguments)
+                // 4b. <div class="Arguments"> Argument descriptions (div Arguments)
                 children.MoveNext();
                 var argumentDescription = children.Current;
                 //Console.WriteLine(argumentDescription.InnerHtml);
             }
 
-            //Sixth element is Description (div ContentBody)
+            // 6. <div class="ContentBody"> Main Description of the function
             //Movenext not necessary as will have been carried out by previous stage
             var functionDescription = children.Current;
 
