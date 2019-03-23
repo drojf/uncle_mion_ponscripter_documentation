@@ -14,9 +14,9 @@ namespace onscripter_documentation
     {
         class FunctionEntry
         {
-            public string id;
-            public string category;
-            public H2HeaderInformation headerInformation;
+            public string id; // 1.
+            public string category; // 2.
+            public H2HeaderInformation headerInformation; // 3.
             public string functionSignature; // 4.
         }
 
@@ -25,7 +25,7 @@ namespace onscripter_documentation
         // 2. A <h2> tag, which contains the light purple part of the header. It contains misc info like which onscripter version it can be used in, and [Definition/Program Block]
         // 3. A <h4> tag, which contains the dark purple part of the header. It contains the Category, like Variable Manipulation/Calculations
         // 4. The argument section. If the function is overloaded, there will be one argument section for each overload. It consists of (all on the root element)
-        //   4a. A <h3> tag, which contains the argument summary (type/order of arguments)
+        //   4a. A <h3> tag, which contains the function signature (type/order of arguments)
         //   4b. A <div class="Arguments"> which contains the a description of each argumens 
         // 5. A <div class="ContentBody">, which contains the command description, AND the links to related commands
 
@@ -74,7 +74,7 @@ namespace onscripter_documentation
                     break;
                 }
 
-                // 4a. <h3> Contains number/type of arguments (not always regular - see the 'subtract (-)' entry)
+                // 4a. <h3> Contains the function signature (number/type of arguments) (not always regular - see the 'subtract (-)' entry)
                 var arguments = children.Current;
                 functionEntry.functionSignature = Util.ConvertToTextStringWithoutWhitespace(children.Current);
                 //Console.WriteLine(arguments.InnerHtml);
