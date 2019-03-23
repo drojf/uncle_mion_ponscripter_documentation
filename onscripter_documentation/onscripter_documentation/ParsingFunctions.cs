@@ -224,8 +224,8 @@ namespace onscripter_documentation
                 {
                     if (x.TagName.ToLower() != "a") { throw new Exception("A non hyperreference was found in the 'links to related functions' section!"); }
                     return new Link() {
-                        linkText = x.Text(),
-                        linkURL = x.GetAttribute("href"),
+                        linkText = x.Text().Trim(),
+                        linkURL = x.GetAttribute("href").Trim(),
                     };
                 }).ToList();
             }

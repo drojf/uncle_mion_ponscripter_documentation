@@ -2,6 +2,10 @@
 
 namespace onscripter_documentation
 {
+    // The following is guarenteed for all these classes (and corresponding JSON outputs):
+    // - all values are non-null
+    // - all strings which don't have "HTML", "Pre", or "URL" in their name can be used as is-without filtering, unless otherwise indicated
+    // - all strings with the above markers need more processing (eg need to be auto converted to markdown).
     class FunctionEntry
     {
         public string id; // 1.
@@ -40,8 +44,7 @@ namespace onscripter_documentation
 
     class FunctionDescription
     {
-        //Description can have indents like: <span class="Indent"> </ span >
-        public string descriptionHTML;
+        public string descriptionHTML; // Description can have indents like: <span class="Indent"> </ span >
         public List<Notice> notices = new List<Notice>();
         public List<Example> examples = new List<Example>();
         public List<Link> relatedFunctionsLinks; // a list of links to related functions
