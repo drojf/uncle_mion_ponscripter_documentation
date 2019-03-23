@@ -101,17 +101,6 @@ namespace onscripter_documentation
             }
         }
 
-        public static void SetAndThrowIfAlreadySet<T>(T valueToSet, ref T variableToSet)
-        {
-            if(variableToSet != null)
-            {
-                throw new Exception("Variable has been set already!");
-            }
-            else
-            {
-                variableToSet = valueToSet;
-            }
-        }
         public static void pauseExit(int exitCode)
         {
             Console.WriteLine("press any key to exit");

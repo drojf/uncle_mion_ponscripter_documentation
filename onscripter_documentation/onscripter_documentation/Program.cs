@@ -35,7 +35,7 @@ namespace onscripter_documentation
             List<FunctionEntry> functionEntries = new List<FunctionEntry>(); 
             while (true)
             {
-                FunctionEntry ent = FunctionEntry.ParseOneFunctionEntry(childIter);
+                FunctionEntry ent = ParsingFunctions.ParseOneFunctionEntry(childIter);
                 if(ent == null)
                 {
                     break;
