@@ -25,6 +25,7 @@ namespace onscripter_documentation
             return $"[{sectionsWhereCommandCanBeUsed}] ({versionsWhereCommandCanBeUsed}): {wordName}";
         }
     }
+
     class ArgumentInformation
     {
         public string argumentSignature;
@@ -66,6 +67,14 @@ namespace onscripter_documentation
     class Link
     {
         public string linkText;
+        /// <summary>
+        /// the raw link URL from unclemion's document, including the #
+        /// </summary>
         public string linkURL;
+        /// <summary>
+        /// the link url without the '#'. This id SHOULD match another function's 'id' field, 
+        /// but it's not generated from this program - it's taken from unclemion's document.
+        /// </summary>
+        public string linkId;
     }
 }

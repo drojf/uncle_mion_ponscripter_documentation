@@ -226,6 +226,7 @@ namespace onscripter_documentation
                     return new Link() {
                         linkText = x.Text().Trim(),
                         linkURL = x.GetAttribute("href").Trim(),
+                        linkId = x.GetAttribute("href").Trim().TrimStart(new char[] { '#' })
                     };
                 }).ToList();
             }
