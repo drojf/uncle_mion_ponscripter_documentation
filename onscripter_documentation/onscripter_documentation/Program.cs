@@ -14,7 +14,7 @@ namespace onscripter_documentation
     {
         static void Main(string[] args)
         {
-            string htmlPath = @"C:\Users\drojf\OneDrive\Drojf\07th_mod\unclemion_backup\NScripter API Reference [compiled by senzogawa, translated_annotated_XML-ized by Mion (incorporates former translation by Seung 'gp32' Park)].html";
+            string htmlPath = @"..\..\..\..\WaybackArchive\NScripter API Reference [compiled by senzogawa, translated_annotated_XML-ized by Mion (incorporates former translation by Seung 'gp32' Park)].html";
 
             //read in from html file
             string htmltext = File.ReadAllText(htmlPath);
