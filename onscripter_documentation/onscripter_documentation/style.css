@@ -1,0 +1,33 @@
+.FunctionEntry {
+    margin-top: 1.5em;
+}
+
+.FunctionName {
+    font-size: 2em;
+    float: left;
+    min-width: 16em;
+}
+
+.TitleRow::after {
+    content: "";
+    clear: both;
+    display: table;
+    margin-bottom: .5em;
+}
+
+.MetadataHolder {
+    float: left;
+    margin-left: 2em;  /*Separate the metadata from the title*/
+    padding: .2em; /*Separate the border from the text inside*/
+    border:solid;
+    border-width: 1px;
+    font-size: .9em;
+}
+
+.FunctionCanBeUsedIn {
+    display: block;
+}
+
+.VersionsCanBeUsedIn {
+    display: block;
+}

@@ -25,15 +25,37 @@ namespace onscripter_documentation
             idLink.Id = fe.id;
             functionEntryRoot.AppendChild(idLink);
 
-            //Create function name
-            var functionName = doc.CreateElement("h2");
-            functionName.TextContent = $"[{fe.headerInformation.wordName}] - {fe.category}";
-            functionEntryRoot.AppendChild(functionName);
+            {
+                var titleRow = doc.CreateElement("div");
+                titleRow.ClassName = "TitleRow";
 
-            // Add misc Information about function in smaller size
-            var functionCanBeUsedIn = doc.CreateElement("p");
-            functionCanBeUsedIn.TextContent = $"{fe.headerInformation.sectionsWhereCommandCanBeUsed} in [ {fe.headerInformation.versionsWhereCommandCanBeUsed} ]";
-            functionEntryRoot.AppendChild(functionCanBeUsedIn);
+                //Create function name
+                var functionName = doc.CreateElement("span");
+                functionName.ClassName = "FunctionName";
+
+                functionName.TextContent = $"[{fe.headerInformation.wordName}] {fe.category}";
+                titleRow.AppendChild(functionName);
+
+                // Add misc Information about function in smaller size
+                {
+                    var metadataHolder = doc.CreateElement("span");
+                    metadataHolder.ClassName = "MetadataHolder";
+
+                    var functionCanBeUsedIn = doc.CreateElement("span");
+                    functionCanBeUsedIn.ClassName = "FunctionCanBeUsedIn";
+                    functionCanBeUsedIn.TextContent = $"{fe.headerInformation.sectionsWhereCommandCanBeUsed}";
+                    metadataHolder.AppendChild(functionCanBeUsedIn);
+
+                    var versionsCanBeUsedIn = doc.CreateElement("span");
+                    versionsCanBeUsedIn.ClassName = "VersionsCanBeUsedIn";
+                    versionsCanBeUsedIn.TextContent = $"{fe.headerInformation.versionsWhereCommandCanBeUsed}";
+                    metadataHolder.AppendChild(versionsCanBeUsedIn);
+
+                    titleRow.AppendChild(metadataHolder);
+                }
+
+                functionEntryRoot.AppendChild(titleRow);
+            }
 
             //Create function description
             var functionDescription = doc.CreateElement("div");
