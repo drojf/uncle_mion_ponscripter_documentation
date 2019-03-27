@@ -60,7 +60,7 @@ namespace onscripter_documentation
 
         static void Main(string[] args)
         {
-            string templateFilePath = "template.html";
+            string templateFilePath = "entire_document_template.html";
 
             string htmlPath = @"..\..\..\..\WaybackArchive\NScripter API Reference [compiled by senzogawa, translated_annotated_XML-ized by Mion (incorporates former translation by Seung 'gp32' Park)].html";
 
