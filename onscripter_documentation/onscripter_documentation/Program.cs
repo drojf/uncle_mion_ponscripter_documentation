@@ -27,8 +27,13 @@ namespace onscripter_documentation
 
             //Create function name
             var functionName = doc.CreateElement("h2");
-            functionName.TextContent = fe.headerInformation.wordName;
+            functionName.TextContent = $"[{fe.headerInformation.wordName}] - {fe.category}";
             functionEntryRoot.AppendChild(functionName);
+
+            // Add misc Information about function in smaller size
+            var functionCanBeUsedIn = doc.CreateElement("p");
+            functionCanBeUsedIn.TextContent = $"{fe.headerInformation.sectionsWhereCommandCanBeUsed} in [ {fe.headerInformation.versionsWhereCommandCanBeUsed} ]";
+            functionEntryRoot.AppendChild(functionCanBeUsedIn);
 
             //Create function description
             var functionDescription = doc.CreateElement("div");
