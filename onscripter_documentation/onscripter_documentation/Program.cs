@@ -85,6 +85,41 @@ namespace onscripter_documentation
             return sw.ToString();
         }
 
+        /// <summary>
+        /// Dump a list documenting each function and its arguments
+        ///
+        /// NOTE: Since the argument list is directly copied from the onscripter documentation
+        /// so it will redundantly include the function name in the argument list.
+        ///
+        /// NOTE: As some functions in Ponscripter are overloaded, some functions
+        /// have multiple argument lists (one for each overloaded variant)
+        ///
+        /// The format is a list, separated by "alert/bell" character '\a':
+        /// [command_name, arg_list1, arg_list2, arg_list3 ...]
+        /// </summary>
+        /// <param name="functionEntries">List of FunctionEntry objects to be dumped</param>
+        static void DumpFunctionList(List<FunctionEntry> functionEntries)
+        {
+            // Write out expected arguments of each function
+            StringBuilder sb = new StringBuilder();
+            foreach (FunctionEntry fe in functionEntries)
+            {
+                List<string> functionArgDump = new List<string>();
+
+                //FunctionArgDump fad = new FunctionArgDump(fe.id);
+                functionArgDump.Add(fe.id);
+
+                foreach (ArgumentInformation arg_info in fe.argumentDescriptions)
+                {
+                    functionArgDump.Add(arg_info.argumentSignature);
+                }
+
+                sb.AppendLine(string.Join("\a", functionArgDump));
+            }
+
+            File.WriteAllText("FunctionList.txt", sb.ToString());
+        }
+
         static void Main(string[] args)
         {
             string templateFilePath = "entire_document_template.html";
@@ -120,6 +155,8 @@ namespace onscripter_documentation
                     functionEntries.Add(ent);
                 }
             }
+
+            DumpFunctionList(functionEntries);
 
             string output = GenerateDocument(templateFilePath, functionEntries);
             Console.WriteLine(output);
